@@ -1,0 +1,138 @@
+/* import { useState } from 'react';
+import './weather.css';
+import { FaSearch, FaMapMarkerAlt } from "react-icons/fa";
+import cloud from "../src/images/Overcast_cloud.png";
+import clearsky from "../src/images/clearsky.png";
+import rain from "../src/images/rain.png";
+import mist from "../src/images/mist.png";
+import haze from "../src/images/haze.png";
+import errorr from "../src/images/error1.png";
+
+export function WeatherApp() {
+    const [search, setSearch] = useState("");
+    const [currentWeather, setCurrentWeather] = useState(null);
+    const [forecastData, setForecastData] = useState([]);
+    const [error, setError] = useState("");
+    const api_key = "0af573b47b970ff6e97b57bc3bdc744d";
+
+    const date = new Date();
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const weekday = date.toLocaleString('en-US', { weekday: 'short' });
+    const today = `${weekday} ${day} ${month}`;
+
+    function handleInput(event) {
+        setSearch(event.target.value);
+    }
+
+    const myFun = async () => {
+        if (!search) {
+            setError("Enter Name");
+            setCurrentWeather(null);
+            setForecastData([]);
+            return;
+        }
+
+        try {
+            // ✅ Current weather API
+            const resCurrent = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${search}&appid=${api_key}&units=metric`);
+            const currentData = await resCurrent.json();
+
+            // ✅ Forecast API (5-day / 3-hour)
+            const resForecast = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${search}&appid=${api_key}&units=metric`);
+            const forecastJson = await resForecast.json();
+
+            if (currentData.cod === "404" || forecastJson.cod === "404") {
+                setError("Please Enter Valid City");
+                setCurrentWeather(null);
+                setForecastData([]);
+            } else {
+                setError("");
+                setCurrentWeather(currentData);
+
+                // ✅ Filter forecast data to only 12:00 PM entries
+                const dailyForecast = forecastJson.list.filter(item =>
+                    item.dt_txt.includes("12:00:00")
+                ).slice(0, 5); // Only next 5 days
+
+                setForecastData(dailyForecast);
+            }
+        } catch (err) {
+            setError("Something went wrong");
+            setCurrentWeather(null);
+            setForecastData([]);
+        }
+
+        setSearch("");
+    };
+
+    // ✅ Weather condition image
+    const getWeatherImage = (main) => {
+        switch (main) {
+            case "Clouds": return cloud;
+            case "Mist": return mist;
+            case "Haze": return haze;
+            case "Clear": return clearsky;
+            case "Rain": return rain;
+            default: return clearsky;
+        }
+    };
+
+    return (
+        <div className="main-container">
+            <div className='container'>
+                <div className="inputs">
+                    <input type="text" placeholder="Enter city, country" onChange={handleInput} value={search} />
+                    <button className="search_btn" onClick={myFun}><FaSearch /></button>
+                </div>
+
+                <div className='output'>
+                    {error && (
+                        <div>
+                            <img className='error-img' src={errorr} alt="error" />
+                            <h4 className='error-msg'>{error}</h4>
+                        </div>
+                    )}
+
+                    {/* ✅ Current Weather }*/
+                   /* {currentWeather && (
+                        <div className="current-weather">
+                            <img className='image' src={getWeatherImage(currentWeather.weather[0].main)} alt="weather" />
+                            <p className='city_name'><FaMapMarkerAlt /> {currentWeather.name}</p>
+                            <h2><span className='temp'>{Math.round(currentWeather.main.temp)}</span>°C</h2>
+                            <h2 className='discription'>{currentWeather.weather[0].description}</h2>
+                            <p className='date'>Today · {today}</p>
+                        </div>
+                    )}
+
+                    {/* ✅ Forecast Section }*/
+                  /*  {forecastData.length > 0 && (
+                        <div className="forecast-section">
+                            <h3>5-Day Forecast</h3>
+                            <div className="forecast-cards">
+                                {
+                                    forecastData.map((item, index) => {
+                                        const date = new Date(item.dt_txt);
+                                        const day = date.toLocaleDateString('en-US', { weekday: 'short' });
+                                        const temp = Math.round(item.main.temp);
+                                        const main = item.weather[0].main;
+                                        const description = item.weather[0].description;
+
+                                        return (
+                                            <div className="forecast-card" key={index}>
+                                                <p className="forecast-day">{day}</p>
+                                                <img src={getWeatherImage(main)} alt={main} className="forecast-img" />
+                                                <p>{temp}°C</p>
+                                                <p className="forecast-desc">{description}</p>
+                                            </div>
+                                        );
+                                    })
+                                }
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+} */
